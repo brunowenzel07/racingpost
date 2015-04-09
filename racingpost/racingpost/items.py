@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Define here the models for your scraped items
-#
-# See documentation in:
-# http://doc.scrapy.org/en/latest/topics/items.html
-
 import scrapy
 
 
-class RaceItem(scrapy.Item):
+class HorseItem(scrapy.Item):
+    racedate = scrapy.Field()
     racename = scrapy.Field()
+    bestodds = scrapy.Field()
+    horsename = scrapy.Field()
+    wgts = scrapy.Field()
+    horsestats = scrapy.Field()
