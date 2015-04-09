@@ -40,7 +40,7 @@ class HorseSpider(scrapy.Spider):
             format_text(racename_part_1), 
             format_text(racename_part_2),
             format_text(racename_part_3)
-        )
+        ).decode('UTF-8')
 
         horse_path = '//table[@id="sc_horseCard"]//'\
             'a[@title="Full details about this HORSE"]/@href'
@@ -52,25 +52,19 @@ class HorseSpider(scrapy.Spider):
 
     def parse_horse(self, response):
 
-        horsename = unicode(response.xpath(
-            '//div[@id="otherHorses"]//option[@selected]/text()').extract()[0])
+        horsename = response.xpath('//div[@id="otherHorses"]//option'
+            '[@selected]/text()').extract()[0]
 
         wgts_path = '//div[@id="horse_form"]//table//tr[@id][@class="fl_F"]/td[4]/text()'
         wgts = [wgt.strip() for wgt in response.xpath(wgts_path).extract()[:5]]
 
         print 'horsename', horsename
 
-        request = scrapy.http.FormRequest(
-            'http://www.pedigreequery.com/cgi-bin/new/check2.cgi',
-            formdata={
-                 'g': '5',
-                 'h': horsename,
-                 'inbred': 'Standard',
-                 'query_type': 'check',
-                 'search_bar': 'horse',
-                 'wsid': '1428325537',
-                 'x2': 'n'
-            },
+        horsename_query = horsename.encode('UTF-8').replace(' ', '+')
+        horsename_url = 'http://www.pedigreequery.com/{}'.format(
+            horsename_query)
+        request = scrapy.Request(
+            horsename_url,
             callback=self.parse_horse_stat,
         )
         request.meta['racename'] = response.meta['racename']
@@ -82,16 +76,8 @@ class HorseSpider(scrapy.Spider):
     def parse_horse_stat(self, response):
 
         horsestats_path = 'normalize-space(//table//center/table[1]//center)'
-        horsestats = unicode(response.xpath(horsestats_path).extract()[0])
+        horsestats = response.xpath(horsestats_path).extract()[0]
 
-        print items.HorseItem(
-            racedate=self.date,
-            racename=response.meta.get('racename'),
-            bestodds=response.meta.get('bestodds'),
-            horsename=response.meta.get('horsename'),
-            wgts=response.meta.get('wgts'),
-            horsestats=horsestats,
-        )
         print 'url', response.url
 
         yield items.HorseItem(
@@ -102,12 +88,3 @@ class HorseSpider(scrapy.Spider):
             wgts=response.meta.get('wgts'),
             horsestats=horsestats,
         )
-
-# http://www.racingpost.com/horses2/cards/card.sd
-# horsename "//table[@id='sc_horseCard']//a[@title]/b/text()"
-# date "//div[contains(@class,'raceTitle')]//span[@class='date']/text()" WEDNESDAY, 08 APRIL 2015
-# WGT "//div[@id='horse_form']//table//tr[@id][@class='fl_F']/td[4]/text()" 9-4
-
-# http://www.pedigreequery.com/half+a+billion
-# "//table//center/table[1]//center/font/text()"   "(IRE) b. G, 2009
-#                              {7} DP = 5-1-2-0-0 (8)  DI = 7.00   CD = 1.38 
