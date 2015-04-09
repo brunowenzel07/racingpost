@@ -58,8 +58,6 @@ class HorseSpider(scrapy.Spider):
         wgts_path = '//div[@id="horse_form"]//table//tr[@id][@class="fl_F"]/td[4]/text()'
         wgts = [wgt.strip() for wgt in response.xpath(wgts_path).extract()[:5]]
 
-        print 'horsename', horsename
-
         horsename_query = horsename.encode('UTF-8').replace(' ', '+')
         horsename_url = 'http://www.pedigreequery.com/{}'.format(
             horsename_query)
@@ -77,8 +75,6 @@ class HorseSpider(scrapy.Spider):
 
         horsestats_path = 'normalize-space(//table//center/table[1]//center)'
         horsestats = response.xpath(horsestats_path).extract()[0]
-
-        print 'url', response.url
 
         yield items.HorseItem(
             racedate=self.date,
