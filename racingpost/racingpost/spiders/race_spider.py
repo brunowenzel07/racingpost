@@ -18,9 +18,9 @@ class HorseSpider(scrapy.Spider):
         ]
 
     def parse(self, response):
-        cards_path = '//h3[text()="WORLDWIDE STAKES RACES"]/ancestor::table'\
-            '[@class="raceHead"]/following-sibling::table[@class="cardsGrid"]'\
-            '//td[2]/a/@href'
+        cards_path = '//div[./table[@class="cardsGrid"]][.//h3[text()!='\
+            '"WORLDWIDE STAKES RACES"]]//a[@title="Click to view card: '\
+            'View Card"]/@href'
         for url in response.xpath(cards_path).extract():
             yield scrapy.Request(
                 'http://{domain}{url}'.format(domain=self.domain, url=url),
