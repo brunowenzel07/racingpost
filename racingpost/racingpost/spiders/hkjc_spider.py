@@ -61,7 +61,8 @@ class HorseSpider(scrapy.Spider):
             'table//a/../../..')
         sectional_time_selector = response.xpath('//table[@class='
             '"bigborder"]//table//a/../../../following-sibling::tr[1]')
-        for line_selector, time_selector in zip(horse_lines_selector, sectional_time_selector):
+        for line_selector, time_selector in zip(horse_lines_selector, 
+                sectional_time_selector):
 
             horsenumber = line_selector.xpath('td[1]/div/text()').extract()[0].strip()
 
