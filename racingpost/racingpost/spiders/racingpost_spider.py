@@ -78,7 +78,7 @@ class HorseSpider(scrapy.Spider):
         horsestats_path = 'normalize-space(//table//center/table[1]//center)'
         horsestats = response.xpath(horsestats_path).extract()[0]
 
-        yield items.HorseItem(
+        yield items.RacingpostHorseItem(
             racedate=self.date,
             racename=response.meta.get('racename'),
             bestodds=response.meta.get('bestodds'),
