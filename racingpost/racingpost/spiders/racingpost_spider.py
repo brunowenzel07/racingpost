@@ -5,7 +5,7 @@ from racingpost import items
 
 class HorseSpider(scrapy.Spider):
 
-    name = 'horse'
+    name = 'racingpost'
     handle_httpstatus_list = [404]
 
     def __init__(self, date, *args, **kwargs):
