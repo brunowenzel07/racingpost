@@ -23,3 +23,4 @@ class HkjcHorseItem(scrapy.Item):
     sirename = scrapy.Field()
     racedate = scrapy.Field()
     place = scrapy.Field()
+    final_sec_time = scrapy.Field()

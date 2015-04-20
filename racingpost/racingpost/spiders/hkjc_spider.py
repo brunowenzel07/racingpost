@@ -120,3 +120,31 @@ class HorseSpider(scrapy.Spider):
             racedate=racedate,
             place=place,
         )
+
+    def parse_horse2(self, response):
+
+        sirename = response.xpath('//th[text()="Sire"]/following-sibling::td/'
+            'a/text()').extract()[0]
+        race_rows_selector = response.xpath('(//tr[@class="even"] | //tr['
+            '@class="even"]/preceding-sibling::tr[1])[position()<6]')
+        racedate = []
+        place = []
+        final_sec_time = []
+        for race_raw_sel in race_rows_selector:
+            racedate.append(race_raw_sel.xpath('td[3]/text()').extract()[0])
+            place.append(race_raw_sel.xpath('td[2]/text()').extract()[0])
+            final_sec_time.append(race_raw_sel.xpath('td[17]/text()').extract()[0])
+
+        yield items.HkjcHorseItem(
+            racenumber=response.meta['racenumber'],
+            raceindex=response.meta['raceindex'],
+            racename=response.meta['racename'],
+            horsenumber=response.meta['horsenumber'],
+            horsename=response.meta['horsename'],
+            horsecode=response.meta['horsecode'],
+            timelist=response.meta['timelist'],
+            sirename=sirename,
+            racedate=racedate,
+            place=place,
+            final_sec_time=final_sec_time,
+        )
