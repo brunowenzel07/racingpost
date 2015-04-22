@@ -25,7 +25,7 @@ class HorseSpider(scrapy.Spider):
     def after_login(self, response):
         request = None
         if 'Please enter your login and passowrd correctly' in response.body:
-            self.log('Login failed', level=self.log.ERROR)
+            self.log('Login failed', level=scrapy.log.ERROR)
         else:
             url = 'http://racing.scmp.com/Resultspro/CalendarList.asp'
             request = scrapy.http.FormRequest(
